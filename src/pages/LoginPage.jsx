@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import robot from "../assets/login.png";
 import logo from "../assets/logo.svg";
 import backgroundImage from "../assets/login_bg.png";
-import { API_ROUTES } from "../constants/apiRoutes";
+// import { API_ROUTES } from "../constants/apiRoutes";
 
 import {
   FaFacebookF,
@@ -44,7 +44,7 @@ export default function LoginPage() {
     e.preventDefault();
     setMessage("Logging in...");
     try {
-      const res = await axios.post(`${API_BASE_URL}${API_ROUTES.LOGIN}`, {
+        const res = await axios.post(`${API_BASE_URL}/cloudseal/v1/api/login`, {
         username,
         password,
       });
