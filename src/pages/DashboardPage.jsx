@@ -381,6 +381,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-base font-medium text-black">$102</p>
+                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
                     <p className="text-sm text-black -mt-1">
                       -10 <FaArrowUp className="inline-block" />
                     </p>
@@ -427,6 +428,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-base font-medium text-black">$102</p>
+                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
                     <p className="text-sm text-black -mt-1">
                       -10 <FaArrowDown className="inline-block" />
                     </p>
@@ -463,7 +465,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card 3: Compliance Status */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[130px] flex flex-col justify-between">
+              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <MdRule className="text-[#6c5ffc] text-xl" />
@@ -471,7 +473,10 @@ export default function DashboardPage() {
                       Compliance Status
                     </h5>
                   </div>
-                  <p className="text-base font-medium text-black">$101.21</p>
+                  <div className="flex flex-col items-end">
+                    <p className="text-base font-medium text-black">$101.21</p>
+                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
+                  </div>
                 </div>
                 <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                   <div className="bg-blue-500 h-full w-[25%]"></div>
@@ -487,7 +492,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card 4: Agent Health */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[130px] flex flex-col justify-between">
+              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <MdMonitorHeart className="text-[#6c5ffc] text-xl" />
@@ -495,7 +500,7 @@ export default function DashboardPage() {
                       Agent Health
                     </h5>
                   </div>
-                  <p className="text-base font-medium text-black">$102</p>
+                  <p className="text-base font-medium text-black">Good</p>
                 </div>
                 <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                   <div className="bg-green-500 h-full w-[40%]"></div>
@@ -511,7 +516,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Card 5: Open Incidents */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[130px] flex flex-col justify-between">
+              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <FaExternalLinkAlt className="text-[#6c5ffc] text-xl" />
@@ -519,7 +524,7 @@ export default function DashboardPage() {
                       Open Incidents
                     </h5>
                   </div>
-                  <p className="text-base font-medium text-black">$102</p>
+                  <p className="text-base font-medium text-black">102</p>
                 </div>
                 <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                   <div className="bg-green-500 h-full w-[30%]"></div>
