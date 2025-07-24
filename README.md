@@ -1,5 +1,4 @@
 # React Auth Landing Page
-#webhook testing
 
 A modern React landing page project built with **Vite**, **Tailwind CSS**, and **React Router**. This project features a simple authentication-style landing layout, icons, and responsive design.
 
