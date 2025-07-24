@@ -15,7 +15,13 @@ import {
   FaUser,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { FaServer, FaRegHardDrive, FaComputer, FaUsers, FaSitemap} from "react-icons/fa6";
+import {
+  FaServer,
+  FaRegHardDrive,
+  FaComputer,
+  FaUsers,
+  FaSitemap,
+} from "react-icons/fa6";
 import { GoGraph } from "react-icons/go";
 
 export default function SideMenu({ isSidenavOpen, toggleSidenav }) {
@@ -29,12 +35,12 @@ export default function SideMenu({ isSidenavOpen, toggleSidenav }) {
     }));
   };
 
-   const handleLogout = (e) => {
+  const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token"); // 🔐 Remove token on logout
     navigate("/login"); // 🔁 Redirect to login page
   };
-  
+
   return (
     <section
       className={`fixed top-0 left-0 h-full bg-[#000030] overflow-y-auto transition-all duration-500 z-[9999] pt-16 pb-20 ${
@@ -55,6 +61,7 @@ export default function SideMenu({ isSidenavOpen, toggleSidenav }) {
         <li>
           <Link
             to="/dashboard"
+            onClick={toggleSidenav}
             className="flex items-center py-3 px-4 border-l-3 border-transparent text-[#b8c7ce] text-sm hover:text-white hover:bg-[#013357] hover:border-[#6c5ffc] transition-colors duration-200"
           >
             <FaUsers className="w-8 text-base" />
