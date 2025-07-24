@@ -15,13 +15,10 @@ export default function AiAgents() {
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen);
-  };
-
-  const handleOpenModal = (agent) => {
-    setSelectedAgent(agent);
   };
 
   useEffect(() => {
@@ -35,7 +32,7 @@ export default function AiAgents() {
     const fetchAgents = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}${API_ROUTES.AI_AGENT}`,
+          `${API_BASE_URL}${API_ROUTES.AI_AGENT}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,6 +45,7 @@ export default function AiAgents() {
           : [response.data];
 
         const transformed = rawData.map((item) => ({
+          id: item.id,
           name: item.name || "Unnamed Agent",
           deployedAt: new Date(item.createdAt).toLocaleDateString("en-IN", {
             year: "numeric",
@@ -71,6 +69,70 @@ export default function AiAgents() {
 
     fetchAgents();
   }, [localStorage.getItem("token")]);
+
+  const handleViewDetails = async (agentId) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("Token not found in localStorage");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}${API_ROUTES.AI_AGENT}/${agentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = response.data;
+
+      const agentDetails = {
+        id: data.id,
+        name: data.name,
+        status: data.status,
+        agentType: data.agentType,
+        config: JSON.parse(data.configJson || "{}"),
+        deployedAt: new Date(data.createdAt).toLocaleDateString("en-IN", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+        user: {
+          username: data.createdBy?.username || "N/A",
+          email: data.createdBy?.email || "N/A",
+          role: data.createdBy?.role || "N/A",
+          status: data.createdBy?.status || "N/A",
+        },
+      };
+
+      console.log("Fetched agent details:", agentDetails);
+      setSelectedAgent(agentDetails);
+    } catch (err) {
+      console.error("Error fetching agent details:", err);
+
+      if (err.response) {
+        console.error(
+          "Server responded with:",
+          err.response.status,
+          err.response.data
+        );
+      } else if (err.request) {
+        console.error(
+          "Request was made but no response received:",
+          err.request
+        );
+      } else {
+        console.error(
+          "Something went wrong setting up the request:",
+          err.message
+        );
+      }
+    }
+  };
 
   const filteredAgents = aiAgentsData.filter((agent) =>
     agent.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -185,7 +247,7 @@ export default function AiAgents() {
                       </td>
                       <td className="px-6 py-3">
                         <button
-                          onClick={() => handleOpenModal(agent)}
+                          onClick={() => handleViewDetails(agent.id)}
                           className="bg-indigo-500 text-white px-4 py-1.5 rounded-md text-xs font-semibold hover:bg-indigo-600"
                         >
                           View Details
@@ -296,31 +358,47 @@ export default function AiAgents() {
         {/* Modal */}
         {selectedAgent && (
           <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-40 pt-24">
-            <div className="bg-white rounded-md shadow-lg w-full max-w-md mx-auto">
-              <div className="flex justify-between items-center p-4 border-b">
-                <h2 className="text-lg font-semibold">AI Agent Details</h2>
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden">
+              {/* Header */}
+              <div className="flex justify-between items-center px-5 py-4 border-b bg-gray-100">
+                <h2 className="text-lg font-bold text-gray-800">
+                  AI Agent Details
+                </h2>
                 <button
                   onClick={() => setSelectedAgent(null)}
-                  className="text-gray-500 hover:text-gray-800 text-xl"
+                  className="text-gray-500 hover:text-red-600 text-xl font-bold"
                 >
                   ✕
                 </button>
               </div>
-              <div className="p-4 text-sm text-gray-700 space-y-2">
-                <p>
-                  <strong>Name:</strong> {selectedAgent.name}
-                </p>
-                <p>
-                  <strong>Status:</strong> {selectedAgent.status}
-                </p>
-                <p>
-                  <strong>Deployed At:</strong> {selectedAgent.deployedAt}
-                </p>
+
+              {/* Content */}
+              <div className="px-6 py-4 text-sm text-gray-700 space-y-3">
+                {[
+                  { label: "Agent Name", value: selectedAgent.name },
+                  { label: "Agent Status", value: selectedAgent.status },
+                  { label: "Deployed At", value: selectedAgent.deployedAt },
+                  { label: "Username", value: selectedAgent.user.username },
+                  { label: "Email", value: selectedAgent.user.email },
+                  { label: "Role", value: selectedAgent.user.role },
+                  { label: "User Status", value: selectedAgent.user.status },
+                ].map((item, index) => (
+                  <div key={index} className="flex justify-between">
+                    <span className="font-medium text-gray-600 w-32">
+                      {item.label}:
+                    </span>
+                    <span className="text-gray-900 break-words text-right">
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-end p-3 border-t">
+
+              {/* Footer */}
+              <div className="flex justify-end px-6 py-3 border-t bg-gray-50">
                 <button
                   onClick={() => setSelectedAgent(null)}
-                  className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition"
                 >
                   OK
                 </button>
