@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import robot from "../assets/login.png";
 import logo from "../assets/logo.svg";
 import backgroundImage from "../assets/login_bg.png";
-// import { API_ROUTES } from "../constants/apiRoutes";
-
+import { API_ROUTES } from "../Constants/apiRoutes";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -43,17 +42,32 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage("Logging in...");
+
     try {
-        const res = await axios.post(`${API_BASE_URL}/cloudseal/v1/api/login`, {
+      const res = await axios.post(`${API_BASE_URL}${API_ROUTES.LOGIN}`, {
         username,
         password,
       });
 
-      localStorage.setItem("token", res.data.token);
-      setMessage("Login successful!");
-      clearMessage();
-      navigate("/dashboard");
+      const token = res.data;
+
+      if (token) {
+        console.log("Saving token:", token);
+        localStorage.setItem("token", token);
+        console.log("Stored token:", localStorage.getItem("token"));
+
+        setTimeout(() => {
+          setMessage("Login successful!");
+          clearMessage();
+          navigate("/dashboard");
+        }, 100);
+      } else {
+        console.error("Token not received:", res);
+        setMessage("Login failed: Token not received.");
+        clearMessage();
+      }
     } catch (err) {
+      console.error("Login error:", err.response || err.message);
       setMessage(
         `Error logging in: ${err.response?.data?.message || err.message}`
       );
@@ -70,17 +84,14 @@ export default function LoginPage() {
     }
     setMessage("Signing up...");
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/cloudseal/v1/api/register`,
-        {
-          username,
-          email,
-          password,
-          role: "admin",
-          status: "active",
-          organizations: { id: 2 },
-        }
-      );
+      const res = await axios.post(`${API_BASE_URL}${API_ROUTES.REGISTER}`, {
+        username,
+        email,
+        password,
+        role: "admin",
+        status: "active",
+        organizations: { id: 2 },
+      });
 
       setMessage("Signup successful!");
       clearMessage();
