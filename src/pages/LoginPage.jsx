@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import robot from "../assets/login.png";
 import logo from "../assets/logo.svg";
@@ -36,6 +36,24 @@ export default function LoginPage() {
   const [country, setCountry] = useState("");
   const [stateName, setStateName] = useState("");
   const [zipCode, setZipCode] = useState("");
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrgId, setSelectedOrgId] = useState("");
+  const [isOtherOrg, setIsOtherOrg] = useState(false);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await axios.get(
+          "http://34.45.198.251:9092/cloudseal/v1/api/organizations"
+        );
+        setOrganizations(response.data);
+      } catch (error) {
+        console.error("Error fetching organizations", error);
+      }
+    };
+
+    fetchOrganizations();
+  }, []);
 
   const clearMessage = () => {
     setTimeout(() => setMessage(""), 3000);
@@ -237,15 +255,61 @@ export default function LoginPage() {
               focus:outline-none focus:ring-2 focus:ring-[#3c2958]
               hover:ring-2 hover:ring-[#3c2958] transition duration-200 font-light font-['Open_Sans']"
                   />
-                  <input
-                    type="text"
-                    placeholder="Organization Name"
-                    value={orgName}
-                    onChange={(e) => setOrgName(e.target.value)}
-                    className="w-full px-4 py-2 bg-[#0a0b20] bg-opacity-20 text-gray-300
-              focus:outline-none focus:ring-2 focus:ring-[#3c2958]
-              hover:ring-2 hover:ring-[#3c2958] transition duration-200 font-light font-['Open_Sans']"
-                  />
+                  <div>
+                    <select
+                      className="w-full px-4 py-2 bg-[#0a0b20] bg-opacity-20 text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#3c2958] hover:ring-2 hover:ring-[#3c2958] transition duration-200 font-light font-['Open_Sans']"
+                      value={selectedOrgId}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSelectedOrgId(val);
+                        if (val === "other") {
+                          setIsOtherOrg(true);
+                          setOrgName("");
+                        } else {
+                          setIsOtherOrg(false);
+                          const selectedOrg = organizations.find(
+                            (org) => org.id.toString() === val
+                          );
+                          if (selectedOrg) {
+                            setOrgName(selectedOrg.name);
+                            setDomain(selectedOrg.domain || "");
+                            setCompanyName(selectedOrg.companyName || "");
+                            setCompanyAddress(selectedOrg.companyAddress || "");
+                            setCountry(selectedOrg.country || "");
+                            setStateName(selectedOrg.state || "");
+                            setZipCode(selectedOrg.zipCode || "");
+                          }
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Select Organization
+                      </option>
+                      {organizations.map((org) => (
+                        <option
+                          key={org.id}
+                          value={org.id}
+                          className="bg-[#0f0c29] text-white"
+                        >
+                          {org.name}
+                        </option>
+                      ))}
+                      <option value="other" className="bg-[#0f0c29] text-white">
+                        Others
+                      </option>
+                    </select>
+
+                    {isOtherOrg && (
+                      <input
+                        type="text"
+                        placeholder="Enter Organization Name"
+                        value={orgName}
+                        onChange={(e) => setOrgName(e.target.value)}
+                        className="mt-2 w-full px-4 py-2 bg-[#0a0b20] bg-opacity-20 text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3c2958] hover:ring-2 hover:ring-[#3c2958] transition duration-200 font-light font-['Open_Sans']"
+                      />
+                    )}
+                  </div>
+
                   <input
                     type="text"
                     placeholder="Domain"
