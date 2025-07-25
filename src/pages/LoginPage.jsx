@@ -262,9 +262,28 @@ export default function LoginPage() {
                       onChange={(e) => {
                         const val = e.target.value;
                         setSelectedOrgId(val);
+
+                        if (val === "") {
+                          setIsOtherOrg(false);
+                          setOrgName("");
+                          setDomain("");
+                          setCompanyName("");
+                          setCompanyAddress("");
+                          setCountry("");
+                          setStateName("");
+                          setZipCode("");
+                          return;
+                        }
+
                         if (val === "other") {
                           setIsOtherOrg(true);
                           setOrgName("");
+                          setDomain("");
+                          setCompanyName("");
+                          setCompanyAddress("");
+                          setCountry("");
+                          setStateName("");
+                          setZipCode("");
                         } else {
                           setIsOtherOrg(false);
                           const selectedOrg = organizations.find(
