@@ -17,6 +17,7 @@ export default function DashboardPage() {
 
   // State for UI elements
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState("FinOps");
 
   // Refs for chart elements
   const pieChartRef = useRef(null);
@@ -366,178 +367,228 @@ export default function DashboardPage() {
         {/* KPI Widgets Section */}
         <section className="mt-5 px-4">
           <div className="container-fluid">
-            <h1 className="text-lg text-[#151D48] font-medium my-3 font-open-sans text-center lg:text-left">
-              KPI Widgets
-            </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 items-center justify-center">
-              {/* Card 1: Cloud Spend */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[110px] flex flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <TbCloudUpload className="text-[#6c5ffc] text-xl" />
-                    <h5 className="text-base font-medium text-[#151D48]">
-                      Cloud Spend
-                    </h5>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-base font-medium text-black">$102</p>
-                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
-                    <p className="text-sm text-black -mt-1">
-                      -10 <FaArrowUp className="inline-block" />
-                    </p>
-                  </div>
-                </div>
-                <svg
-                  viewBox="0 0 100 40"
-                  preserveAspectRatio="none"
-                  className="w-full h-12 mt-2"
-                >
-                  <defs>
-                    <linearGradient
-                      id="cloudGradient"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-lg text-[#151D48] font-bold font-open-sans">
+                AI Agents
+              </h1>
+              <select
+                value={selectedAgent}
+                onChange={(e) => setSelectedAgent(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-1 bg-white text-[#151D48] focus:outline-none"
+              >
+                <option value="FinOps">FinOps Agent</option>
+                <option value="SecOps">SecOps Agent</option>
+                <option value="DevOps">DevOps Agent</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center justify-center">
+              {selectedAgent === "FinOps" && (
+                <>
+                  <h2 className="text-[#151D48] text-lg font-medium col-span-full">
+                    FinOps Predicted Spend
+                  </h2>
+                  {/* Cloud Spend */}
+                  <div className="bg-white rounded-lg shadow-md p-4 min-h-[110px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <TbCloudUpload className="text-[#6c5ffc] text-xl" />
+                        <h5 className="text-base font-medium text-[#151D48]">
+                          Cloud Spend
+                        </h5>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-base font-medium text-black">$102</p>
+                        <p className="text-xs text-gray-500 -mt-1">Per month</p>
+                        <p className="text-sm text-black -mt-1">
+                          -10 <FaArrowUp className="inline-block" />
+                        </p>
+                      </div>
+                    </div>
+                    <svg
+                      viewBox="0 0 100 40"
+                      preserveAspectRatio="none"
+                      className="w-full h-12 mt-2"
                     >
-                      <stop offset="0%" stopColor="#00CFE8" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#00CFE8" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M0 35 C 20 25, 40 30, 60 20 C 80 10, 100 30, 100 30 L100 40 L0 40 Z"
-                    fill="url(#cloudGradient)"
-                  />
-                  <path
-                    d="M0 35 C 20 25, 40 30, 60 20 C 80 10, 100 30, 100 30"
-                    fill="none"
-                    stroke="#00CFE8"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </div>
+                      <defs>
+                        <linearGradient
+                          id="cloudGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor="#00CFE8"
+                            stopOpacity="0.4"
+                          />
+                          <stop
+                            offset="100%"
+                            stopColor="#00CFE8"
+                            stopOpacity="0"
+                          />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M0 35 C 20 25, 40 30, 60 20 C 80 10, 100 30, 100 30 L100 40 L0 40 Z"
+                        fill="url(#cloudGradient)"
+                      />
+                      <path
+                        d="M0 35 C 20 25, 40 30, 60 20 C 80 10, 100 30, 100 30"
+                        fill="none"
+                        stroke="#00CFE8"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                  </div>
 
-              {/* Cost Savings Card */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[130px] flex flex-col justify-between">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <TbMoneybag className="text-[#6c5ffc] text-xl" />
-                    <h5 className="text-base font-medium text-[#151D48]">
-                      Cost Savings
-                    </h5>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-base font-medium text-black">$102</p>
-                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
-                    <p className="text-sm text-black -mt-1">
-                      -10 <FaArrowDown className="inline-block" />
-                    </p>
-                  </div>
-                </div>
-                <svg
-                  viewBox="0 0 100 40"
-                  preserveAspectRatio="none"
-                  className="w-full h-12 mt-2"
-                >
-                  <defs>
-                    <linearGradient
-                      id="savingsGradient"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
+                  {/* Cost Savings */}
+                  <div className="bg-white rounded-lg shadow-md p-4 min-h-[130px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <TbMoneybag className="text-[#6c5ffc] text-xl" />
+                        <h5 className="text-base font-medium text-[#151D48]">
+                          Cost Savings
+                        </h5>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-base font-medium text-black">$102</p>
+                        <p className="text-xs text-gray-500 -mt-1">Per month</p>
+                        <p className="text-sm text-black -mt-1">
+                          -10 <FaArrowDown className="inline-block" />
+                        </p>
+                      </div>
+                    </div>
+                    <svg
+                      viewBox="0 0 100 40"
+                      preserveAspectRatio="none"
+                      className="w-full h-12 mt-2"
                     >
-                      <stop offset="0%" stopColor="#28C76F" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#28C76F" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M0 30 C 20 20, 40 25, 60 25 C 80 25, 100 20, 100 20 L100 40 L0 40 Z"
-                    fill="url(#savingsGradient)"
-                  />
-                  <path
-                    d="M0 30 C 20 20, 40 25, 60 25 C 80 25, 100 20, 100 20"
-                    fill="none"
-                    stroke="#28C76F"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </div>
+                      <defs>
+                        <linearGradient
+                          id="savingsGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor="#28C76F"
+                            stopOpacity="0.4"
+                          />
+                          <stop
+                            offset="100%"
+                            stopColor="#28C76F"
+                            stopOpacity="0"
+                          />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M0 30 C 20 20, 40 25, 60 25 C 80 25, 100 20, 100 20 L100 40 L0 40 Z"
+                        fill="url(#savingsGradient)"
+                      />
+                      <path
+                        d="M0 30 C 20 20, 40 25, 60 25 C 80 25, 100 20, 100 20"
+                        fill="none"
+                        stroke="#28C76F"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                  </div>
+                </>
+              )}
 
-              {/* Card 3: Compliance Status */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <MdRule className="text-[#6c5ffc] text-xl" />
-                    <h5 className="text-base font-medium text-[#151D48]">
-                      Compliance Status
-                    </h5>
+              {selectedAgent === "SecOps" && (
+                <>
+                  <h2 className="text-[#151D48] text-lg font-semibold col-span-full">
+                    SecOps Compliance Insights
+                  </h2>
+                  {/* Compliance Status */}
+                  <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <MdRule className="text-[#6c5ffc] text-xl" />
+                        <h5 className="text-base font-medium text-[#151D48]">
+                          Compliance Status
+                        </h5>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <p className="text-base font-medium text-black">
+                          $101.21
+                        </p>
+                        <p className="text-xs text-gray-500 -mt-1">Per month</p>
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-blue-500 h-full w-[25%]" />
+                    </div>
+                    <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
+                      <span>
+                        Start Date: <strong>10th JAN</strong>
+                      </span>
+                      <span>
+                        End Date: <strong>29th JAN</strong>
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <p className="text-base font-medium text-black">$101.21</p>
-                    <p className="text-xs text-gray-500 -mt-1">Per month</p>
-                  </div>
-                </div>
-                <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-blue-500 h-full w-[25%]"></div>
-                </div>
-                <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
-                  <span>
-                    Start Date: <strong>10th JAN</strong>
-                  </span>
-                  <span>
-                    End Date: <strong>29th JAN</strong>
-                  </span>
-                </div>
-              </div>
 
-              {/* Card 4: Agent Health */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <MdMonitorHeart className="text-[#6c5ffc] text-xl" />
-                    <h5 className="text-base font-medium text-[#151D48]">
-                      Agent Health
-                    </h5>
+                  {/* Agent Health */}
+                  <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <MdMonitorHeart className="text-[#6c5ffc] text-xl" />
+                        <h5 className="text-base font-medium text-[#151D48]">
+                          Agent Health
+                        </h5>
+                      </div>
+                      <p className="text-base font-medium text-black">Good</p>
+                    </div>
+                    <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-green-500 h-full w-[40%]" />
+                    </div>
+                    <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
+                      <span>
+                        Start Date: <strong>10th JAN</strong>
+                      </span>
+                      <span>
+                        End Date: <strong>29th JAN</strong>
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-base font-medium text-black">Good</p>
-                </div>
-                <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-green-500 h-full w-[40%]"></div>
-                </div>
-                <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
-                  <span>
-                    Start Date: <strong>10th JAN</strong>
-                  </span>
-                  <span>
-                    End Date: <strong>29th JAN</strong>
-                  </span>
-                </div>
-              </div>
+                </>
+              )}
 
-              {/* Card 5: Open Incidents */}
-              <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <FaExternalLinkAlt className="text-[#6c5ffc] text-xl" />
-                    <h5 className="text-base font-medium text-[#151D48]">
-                      Open Incidents
-                    </h5>
+              {selectedAgent === "DevOps" && (
+                <>
+                  <h2 className="text-[#151D48] text-lg font-medium col-span-full">
+                    DevOps Agent
+                  </h2>
+                  <div className="bg-white rounded-lg shadow-md p-4 min-h-[140px] flex flex-col justify-between col-span-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <MdMonitorHeart className="text-[#6c5ffc] text-xl" />
+                        <h5 className="text-base font-medium text-[#151D48]">
+                          Agent Health
+                        </h5>
+                      </div>
+                      <p className="text-base font-medium text-black">Good</p>
+                    </div>
+                    <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-green-500 h-full w-[40%]" />
+                    </div>
+                    <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
+                      <span>
+                        Start Date: <strong>10th JAN</strong>
+                      </span>
+                      <span>
+                        End Date: <strong>29th JAN</strong>
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-base font-medium text-black">102</p>
-                </div>
-                <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-green-500 h-full w-[30%]"></div>
-                </div>
-                <div className="flex justify-between text-xs text-[#151D48] mt-2 px-1">
-                  <span>
-                    Start Date: <strong>10th JAN</strong>
-                  </span>
-                  <span>
-                    End Date: <strong>29th JAN</strong>
-                  </span>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </section>
@@ -545,7 +596,7 @@ export default function DashboardPage() {
         {/* Total Revenue Section */}
         <section className="mt-8 px-4">
           <div className="container-fluid">
-            <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {/* Usage Graph */}
               <div className="bg-white rounded-lg shadow-md p-4 pt-2">
                 <h2 className="text-base text-[#151D48] font-medium font-open-sans mt-5 mb-2">
