@@ -44,14 +44,13 @@ export default function LoginPage() {
     const fetchOrganizations = async () => {
       try {
         const response = await axios.get(
-          "http://34.45.198.251:9092/cloudseal/v1/api/organizations"
+          `${API_BASE_URL}${API_ROUTES.ORGANIZATIONS}`
         );
         setOrganizations(response.data);
       } catch (error) {
         console.error("Error fetching organizations", error);
       }
     };
-
     fetchOrganizations();
   }, []);
 
