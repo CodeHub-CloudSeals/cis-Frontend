@@ -10,7 +10,6 @@ export default function AuditLogs() {
     setSelectedAgent(agent);
   };
 
-  // Dummy data for AI Agents table
   const [aiAgentsData, setAiAgentsData] = useState([
     { name: "Airi Satou", deployedAt: "2025-06-01", status: "Idle" },
     { name: "Angelica Ramos", deployedAt: "2025-06-01", status: "Running" },
@@ -63,10 +62,8 @@ export default function AuditLogs() {
     indexOfLastAgent
   );
 
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Function to toggle sidebar
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen);
   };
@@ -89,7 +86,7 @@ export default function AuditLogs() {
         <div className="bg-white border border-dashed border-gray-300 rounded-lg p-4 mb-6 shadow-sm">
           <div className="text-sm text-gray-600">
             <Link to="/dashboard" className="text-blue-600 hover:underline">
-              Dashboard
+              Home
             </Link>{" "}
             / <span className="text-gray-800 font-medium">Audit Logs</span>
           </div>

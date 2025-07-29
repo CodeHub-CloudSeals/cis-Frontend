@@ -369,7 +369,7 @@ export default function DashboardPage() {
           <div className="container-fluid">
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-lg text-[#151D48] font-bold font-open-sans">
-                AI Agents
+                KPI Widgets
               </h1>
               <select
                 value={selectedAgent}

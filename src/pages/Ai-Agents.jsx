@@ -163,7 +163,7 @@ export default function AiAgents() {
         <div className="bg-white border border-dashed border-gray-300 rounded-lg p-4 mb-6 shadow-sm">
           <div className="text-sm text-gray-600">
             <Link to="/dashboard" className="text-blue-600 hover:underline">
-              Dashboard
+              Home
             </Link>{" "}
             / <span className="text-gray-800 font-medium">AI Agents</span>
           </div>
