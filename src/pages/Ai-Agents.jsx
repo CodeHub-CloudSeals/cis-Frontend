@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import Header from "../Components/Header";
 import SideMenu from "../Components/SideMenu";
 import { API_ROUTES } from "../Constants/apiRoutes";
+import { useNavigate } from "react-router-dom";
 
 export default function AiAgents() {
+  const navigate = useNavigate();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [aiAgentsData, setAiAgentsData] = useState([]);
@@ -20,6 +22,14 @@ export default function AiAgents() {
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen);
   };
+
+  // use effect for Auth check
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -154,9 +164,8 @@ export default function AiAgents() {
       <SideMenu isSidenavOpen={isSidenavOpen} toggleSidenav={toggleSidenav} />
 
       <div
-        className={`p-2 pt-2 transition-all duration-500 ${
-          isSidenavOpen ? "lg:ml-72" : "lg:ml-0"
-        }`}
+        className={`p-2 pt-2 transition-all duration-500 ${isSidenavOpen ? "lg:ml-72" : "lg:ml-0"
+          }`}
       >
         <h1 className="text-md font-bold text-[#151D48] mb-4">AI Agents</h1>
 
@@ -236,11 +245,10 @@ export default function AiAgents() {
                       <td className="px-6 py-3 border-r">{agent.deployedAt}</td>
                       <td className="px-6 py-3 border-r">
                         <span
-                          className={`px-3 py-1 rounded-md text-xs font-semibold ${
-                            agent.status === "Running"
-                              ? "bg-green-600 text-white"
-                              : "bg-red-600 text-white"
-                          }`}
+                          className={`px-3 py-1 rounded-md text-xs font-semibold ${agent.status === "Running"
+                            ? "bg-green-600 text-white"
+                            : "bg-red-600 text-white"
+                            }`}
                         >
                           {agent.status}
                         </span>
@@ -290,11 +298,10 @@ export default function AiAgents() {
               <button
                 onClick={() => paginate(1)}
                 disabled={currentPage === 1}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${
-                  currentPage === 1
-                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                    : "text-blue-600 bg-white hover:bg-blue-50"
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${currentPage === 1
+                  ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                  : "text-blue-600 bg-white hover:bg-blue-50"
+                  }`}
               >
                 «
               </button>
@@ -303,11 +310,10 @@ export default function AiAgents() {
               <button
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${
-                  currentPage === 1
-                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                    : "text-blue-600 bg-white hover:bg-blue-50"
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${currentPage === 1
+                  ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                  : "text-blue-600 bg-white hover:bg-blue-50"
+                  }`}
               >
                 ‹
               </button>
@@ -316,11 +322,10 @@ export default function AiAgents() {
               <li key={i}>
                 <button
                   onClick={() => paginate(i + 1)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${
-                    currentPage === i + 1
-                      ? "bg-[#001e3c] text-white"
-                      : "text-blue-600 bg-white hover:bg-blue-50"
-                  }`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${currentPage === i + 1
+                    ? "bg-[#001e3c] text-white"
+                    : "text-blue-600 bg-white hover:bg-blue-50"
+                    }`}
                 >
                   {i + 1}
                 </button>
@@ -330,11 +335,10 @@ export default function AiAgents() {
               <button
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${
-                  currentPage === totalPages
-                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                    : "text-blue-600 bg-white hover:bg-blue-50"
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${currentPage === totalPages
+                  ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                  : "text-blue-600 bg-white hover:bg-blue-50"
+                  }`}
               >
                 ›
               </button>
@@ -343,11 +347,10 @@ export default function AiAgents() {
               <button
                 onClick={() => paginate(totalPages)}
                 disabled={currentPage === totalPages}
-                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${
-                  currentPage === totalPages
-                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                    : "text-blue-600 bg-white hover:bg-blue-50"
-                }`}
+                className={`w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium ${currentPage === totalPages
+                  ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                  : "text-blue-600 bg-white hover:bg-blue-50"
+                  }`}
               >
                 »
               </button>
