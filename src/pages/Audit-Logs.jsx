@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Header from "../Components/Header";
 import SideMenu from "../Components/SideMenu";
+import { useNavigate } from "react-router-dom";
 export default function AuditLogs() {
+   const navigate = useNavigate();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
 
@@ -10,6 +12,15 @@ export default function AuditLogs() {
     setSelectedAgent(agent);
   };
 
+   // use effect for Auth check
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+      }
+    }, []);
+
+  // Dummy data for AI Agents table
   const [aiAgentsData, setAiAgentsData] = useState([
     { name: "Airi Satou", deployedAt: "2025-06-01", status: "Idle" },
     { name: "Angelica Ramos", deployedAt: "2025-06-01", status: "Running" },
