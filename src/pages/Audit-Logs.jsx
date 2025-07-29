@@ -1,77 +1,83 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "../Components/Header";
 import SideMenu from "../Components/SideMenu";
 import { useNavigate } from "react-router-dom";
-export default function AuditLogs() {
-   const navigate = useNavigate();
-  const [isSidenavOpen, setIsSidenavOpen] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState(null);
+import { API_ROUTES } from "../Constants/apiRoutes";
 
-  const handleOpenModal = (agent) => {
-    setSelectedAgent(agent);
+export default function AuditLogs() {
+  const navigate = useNavigate();
+  const [isSidenavOpen, setIsSidenavOpen] = useState(false);
+  const [auditLogs, setAuditLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedLog, setSelectedLog] = useState(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const handleOpenModal = (log) => {
+    setSelectedLog(log);
   };
 
-   // use effect for Auth check
-    useEffect(() => {
+  // use effect for Auth check
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchAuditLogs = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login");
+        setLoading(false);
+        return;
       }
-    }, []);
 
-  // Dummy data for AI Agents table
-  const [aiAgentsData, setAiAgentsData] = useState([
-    { name: "Airi Satou", deployedAt: "2025-06-01", status: "Idle" },
-    { name: "Angelica Ramos", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Ashton Cox", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Bradley Greer", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Brielle Williamson", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Caesar Vance", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Cedric Kelly", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Charde Marshall", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Colleen Hurst", deployedAt: "2025-06-01", status: "Running" },
-    { name: "Dai Rios", deployedAt: "2025-06-01", status: "Idle" },
-    { name: "Gavin Joyce", deployedAt: "2025-06-02", status: "Running" },
-    { name: "Jennifer Chang", deployedAt: "2025-06-02", status: "Idle" },
-    { name: "Michael Bruce", deployedAt: "2025-06-02", status: "Running" },
-    { name: "Donna Snider", deployedAt: "2025-06-02", status: "Idle" },
-    { name: "Tiger Nixon", deployedAt: "2025-06-03", status: "Running" },
-    { name: "Garrett Winters", deployedAt: "2025-06-03", status: "Idle" },
-    { name: "Ashton Cox", deployedAt: "2025-06-03", status: "Running" },
-    { name: "Cedric Kelly", deployedAt: "2025-06-03", status: "Running" },
-    { name: "Airi Satou", deployedAt: "2025-06-04", status: "Idle" },
-    { name: "Brielle Williamson", deployedAt: "2025-06-04", status: "Running" },
-    { name: "Herrod Chandler", deployedAt: "2025-06-04", status: "Running" },
-    { name: "Rhona Davidson", deployedAt: "2025-06-04", status: "Idle" },
-    { name: "Colleen Hurst", deployedAt: "2025-06-05", status: "Running" },
-    { name: "Jena Gaines", deployedAt: "2025-06-05", status: "Idle" },
-    { name: "Quinn Flynn", deployedAt: "2025-06-05", status: "Running" },
-    { name: "Haley Kennedy", deployedAt: "2025-06-05", status: "Running" },
-    { name: "Tatyana Fitzpatrick", deployedAt: "2025-06-06", status: "Idle" },
-    { name: "Michael Silva", deployedAt: "2025-06-06", status: "Running" },
-    { name: "Paul Byrd", deployedAt: "2025-06-06", status: "Running" },
-  ]);
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${API_BASE_URL}${API_ROUTES.AUDIT_LOG}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAuditLogs(response.data);
+        setError(null);
+      } catch (err) {
+        console.error(
+          "Failed to fetch audit logs:",
+          err?.response || err.message
+        );
+        setError("Unauthorized or failed to fetch audit logs.");
+        setAuditLogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuditLogs();
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filtered data based on search term
-  const filteredAgents = aiAgentsData.filter((agent) =>
-    agent.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredLogs = auditLogs.filter((log) =>
+    log.eventType.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredAgents.length / entriesPerPage);
+  const totalPages = Math.ceil(filteredLogs.length / entriesPerPage);
 
   // Get current agents for the page
-  const indexOfLastAgent = currentPage * entriesPerPage;
-  const indexOfFirstAgent = indexOfLastAgent - entriesPerPage;
-  const currentAgents = filteredAgents.slice(
-    indexOfFirstAgent,
-    indexOfLastAgent
-  );
+  const indexOfLastLog = currentPage * entriesPerPage;
+  const indexOfFirstLog = indexOfLastLog - entriesPerPage;
+  const currentLogs = filteredLogs.slice(indexOfFirstLog, indexOfLastLog);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -103,22 +109,22 @@ export default function AuditLogs() {
           </div>
         </div>
 
-        {/* AI Agents Table */}
+        {/* Audit Logs Table */}
         <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
           <table className="w-full text-sm text-left text-gray-700 border-collapse">
             <thead className="text-xs text-white bg-[#000030]">
               <tr>
                 <th
                   scope="col"
-                  className="px-6 py-3 rounded-tl-lg border-r border-gray-300"
+                  className="px-6 py-3 rounded-tl-lg border-r border-gray-300 w-1/3"
                 >
-                  Name
+                  Event Type
                 </th>
-                <th scope="col" className="px-6 py-3 border-r border-gray-300">
-                  Deployed At
-                </th>
-                <th scope="col" className="px-6 py-3 border-r border-gray-300">
-                  Status
+                <th
+                  scope="col"
+                  className="px-6 py-3 border-r border-gray-300 w-1/3"
+                >
+                  Event Time
                 </th>
                 <th scope="col" className="px-6 py-3 rounded-tr-lg">
                   View Details
@@ -126,32 +132,41 @@ export default function AuditLogs() {
               </tr>
             </thead>
             <tbody>
-              {currentAgents.length > 0 ? (
-                currentAgents.map((agent, index) => (
+              {loading ? (
+                <tr>
+                  <td colSpan="3" className="text-center py-4">
+                    Loading...
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan="3" className="text-center py-4 text-red-500">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : currentLogs.length > 0 ? (
+                currentLogs.map((log) => (
                   <tr
-                    key={index}
+                    key={log.id}
                     className="bg-white border-b hover:bg-gray-50"
                   >
                     <td className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap border-r border-gray-300">
-                      {agent.name}
-                    </td>
-                    <td className="px-6 py-3 border-r border-gray-300">
-                      {agent.deployedAt}
-                    </td>
-                    <td className="px-6 py-3 border-r border-gray-300">
                       <span
                         className={`px-3 py-1 rounded-md text-xs cursor-pointer font-semibold ${
-                          agent.status === "Running"
-                            ? "bg-green-600 text-white"
-                            : "bg-red-600 text-white"
+                          log.eventType === "USER_LOGIN"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {agent.status}
+                        {log.eventType.replace(/_/g, " ")}
                       </span>
                     </td>
-                    <td className="px-6 py-3">
+                    <td className="px-6 py-3 border-r border-gray-300">
+                      {new Date(log.eventTime).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-3 text-center">
                       <button
-                        onClick={() => handleOpenModal(agent)}
+                        onClick={() => handleOpenModal(log)}
                         className="bg-indigo-500 text-white px-4 py-1.5 rounded-md text-xs font-semibold hover:bg-indigo-600 transition-colors"
                       >
                         View Details
@@ -162,10 +177,10 @@ export default function AuditLogs() {
               ) : (
                 <tr className="bg-white border-b">
                   <td
-                    colSpan="4"
+                    colSpan="3"
                     className="px-6 py-4 text-center text-gray-500"
                   >
-                    No agents found.
+                    No audit logs found.
                   </td>
                 </tr>
               )}
@@ -178,12 +193,12 @@ export default function AuditLogs() {
           <span className="text-sm font-normal text-gray-700 mb-4 md:mb-0">
             Showing{" "}
             <span className="font-semibold text-gray-900">
-              {indexOfFirstAgent + 1} to{" "}
-              {Math.min(indexOfLastAgent, filteredAgents.length)}
+              {filteredLogs.length > 0 ? indexOfFirstLog + 1 : 0} to{" "}
+              {Math.min(indexOfLastLog, filteredLogs.length)}
             </span>{" "}
             of{" "}
             <span className="font-semibold text-gray-900">
-              {filteredAgents.length}
+              {filteredLogs.length}
             </span>{" "}
             entries
           </span>
@@ -267,13 +282,13 @@ export default function AuditLogs() {
           </ul>
         </nav>
 
-        {selectedAgent && (
-          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-40 pt-24">
-            <div className="bg-white rounded-md shadow-lg w-full max-w-md mx-auto">
+        {selectedLog && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-40 pt-24 overflow-y-auto">
+            <div className="bg-white rounded-md shadow-lg w-full max-w-md mx-auto my-8">
               <div className="flex justify-between items-center p-4 border-b">
-                <h2 className="text-lg font-semibold">AI Agents Details</h2>
+                <h2 className="text-lg font-semibold">Audit Log Details</h2>
                 <button
-                  onClick={() => setSelectedAgent(null)}
+                  onClick={() => setSelectedLog(null)}
                   className="text-gray-500 hover:text-gray-800 text-xl"
                 >
                   ✕
@@ -281,21 +296,42 @@ export default function AuditLogs() {
               </div>
               <div className="p-4 text-sm text-gray-700 space-y-2">
                 <p>
-                  <strong>Name:</strong> {selectedAgent.name}
+                  <strong>Event ID:</strong> {selectedLog.id}
                 </p>
                 <p>
-                  <strong>Status:</strong> {selectedAgent.status}
+                  <strong>Event Type:</strong>{" "}
+                  {selectedLog.eventType.replace(/_/g, " ")}
                 </p>
                 <p>
-                  <strong>Deployed At:</strong> {selectedAgent.deployedAt}
+                  <strong>Event Time:</strong>{" "}
+                  {new Date(selectedLog.eventTime).toLocaleString()}
                 </p>
+                <p>
+                  <strong>User ID:</strong> {selectedLog.userId}
+                </p>
+                <p>
+                  <strong>Agent ID:</strong> {selectedLog.agentId}
+                </p>
+                <p>
+                  <strong>Organization ID:</strong> {selectedLog.organizationId}
+                </p>
+                <div>
+                  <strong>Details:</strong>
+                  <pre className="bg-gray-100 p-2 rounded-md mt-1 text-xs whitespace-pre-wrap break-all">
+                    {JSON.stringify(
+                      JSON.parse(selectedLog.detailsJson),
+                      null,
+                      2
+                    )}
+                  </pre>
+                </div>
               </div>
               <div className="flex justify-end p-3 border-t">
                 <button
-                  onClick={() => setSelectedAgent(null)}
+                  onClick={() => setSelectedLog(null)}
                   className="bg-blue-600 text-white px-4 py-1.5 rounded-md text-sm hover:bg-blue-700"
                 >
-                  OK
+                  Close
                 </button>
               </div>
             </div>
