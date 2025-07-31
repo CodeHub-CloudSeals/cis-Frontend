@@ -14,6 +14,7 @@ import Footer from "./Components/Footer";
 import AuditLogs from "./pages/Audit-Logs";
 import ActivateUser from "./pages/ActivateUser";
 import WorkflowPage from "./pages/WorkflowAndAutomations";
+import CostOptimizationPage from "./pages/CostOptimization";
 
 function AppContent() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function AppContent() {
           <Route path="/ai-agents" element={<AiAgents />} />
           <Route path="/audit-logs" element={<AuditLogs />} />
           <Route path="/workflow" element={<WorkflowPage />} />
+          <Route path="/cost-optimization" element={<CostOptimizationPage />} />
           <Route path="/activateUser" element={<ActivateUser />} />
           <Route
             path="/dashboard"

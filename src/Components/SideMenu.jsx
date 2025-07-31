@@ -150,7 +150,7 @@ export default function SideMenu({ isSidenavOpen, toggleSidenav }) {
         </li>
         <li className="treeview">
           <a
-            href="#"
+            href="/cost-optimization"
             className="flex items-center py-3 px-4 border-l-3 border-transparent text-[#b8c7ce] text-sm hover:text-white hover:bg-[#013357] hover:border-[#6c5ffc] transition-colors duration-200"
             onClick={() => toggleTreeview("costOptimization")}
           >
