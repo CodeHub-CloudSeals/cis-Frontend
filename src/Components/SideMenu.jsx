@@ -90,7 +90,7 @@ export default function SideMenu({ isSidenavOpen, toggleSidenav }) {
             >
               <li>
                 <a
-                  href="#"
+                  href="/compute"
                   className="flex items-center py-1.5 px-4 text-sm text-[#8aa4af] bg-[#1e2145] hover:text-white transition-colors duration-200"
                 >
                   <FaComputer className="w-8 text-base" />
